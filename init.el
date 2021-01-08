@@ -1,4 +1,4 @@
-;;; Basic
+;;; BASIC
 (setq inhibit-startup-message t)
 
 (scroll-bar-mode -1) ; Disable visible scrollbar
@@ -29,6 +29,11 @@
 
 
 ;;; Packages
+
+;; TIPS
+;; 1. If say "package XYZ...zip not found"
+;; launch command "list-packages". It will update the package list
+
 ;; Initialize package sources
 (require 'package)
 
@@ -55,7 +60,7 @@
  '(custom-safe-themes
    '("c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" default))
  '(package-selected-packages
-   '(doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
+   '(hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -137,14 +142,62 @@
   ([remap describe-key] . helpful-key))
 
 ;; General.el
-;; (use-package general
-;;   :config
-;;   (general-create-definer ggiuanni/leader-keys
-;;     :keymaps '(normal insert visual emacs)
-;;     :prefix "SPC"
-;;     :global-prefix "C-SPC")
+(use-package general
+  :config
+  (general-create-definer ggiuanni/leader-keys
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
 
-;;   (ggiuanni/leader-keys
-;;    "t"  '(:ignore t :which-key "toggles")
-;;    "tt" '(counsel-load-theme :which-key "choose-theme")))
+  (ggiuanni/leader-keys
+   "t"  '(:ignore t :which-key "toggles")
+   "tt" '(counsel-load-theme :which-key "choose-theme")))
 
+;; Evil mode
+(defun ggiuanni/evil-hook ()
+  (dolist (mode '(custom-mode
+		  eshell-mode
+		  git-rebase-mode
+		  erc-mode
+		  circe-server-mode
+		  circe-chat-mode
+		  circe-query-mode
+		  sauron-mode
+		  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
+
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  ;; :hook (evil-mode . ggiuanni/evil-hook)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
+;; Hydra for transient state key-bindings
+(use-package hydra)
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+(ggiuanni/leader-keys
+ "ts" '(hydra-text-scale/body :which-key "scale text"))
