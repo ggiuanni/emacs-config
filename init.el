@@ -5,8 +5,7 @@
 (tool-bar-mode -1)   ; Disable the toolbar
 (tooltip-mode -1)    ; Disable tooltips
 (set-fringe-mode 10) ; Give some breathing room
-
-(menu-bar-mode -1)
+(menu-bar-mode -1)   ; Disable menu bar
 
 ;; Set up visual bell
 (setq visible-bell t)
@@ -17,7 +16,7 @@
 ;; Make ESC quit propts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-;; Line numbers
+;; Show line numbers
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
@@ -27,6 +26,7 @@
 		shell-mode-hook
 		eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
 
 ;;; Packages
 ;; Initialize package sources
@@ -63,6 +63,7 @@
  ;; If there is more than one, they won't work right.
  )
 
+;; Logging commands (not really necessary)
 (use-package command-log-mode)
 
 ;; Use Ivy and Councel for completition
@@ -93,22 +94,32 @@
   :config
   (ivy-mode 1))
 
-
 (use-package ivy-rich
   :init
   (ivy-rich-mode 1))
 
+;; NOTE: The first time you load your configuration on a new machine, you'll
+;; need to run the following command interactively so that mode line icons
+;; display correctly:
+;;
+;; M-x all-the-icons-install-fonts
+
+(use-package all-the-icons)
+
+;; Doom modeline
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
 
+;; Doom themes
 (use-package doom-themes
-  :config
-  (load-theme 'doom-palenight t))
+  :init (load-theme 'doom-palenight t))
 
+;; Colored Parenthesis
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;; Show possible keys after a base command (Ex. C-x)
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -124,4 +135,16 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel.describe-varible)
   ([remap describe-key] . helpful-key))
+
+;; General.el
+;; (use-package general
+;;   :config
+;;   (general-create-definer ggiuanni/leader-keys
+;;     :keymaps '(normal insert visual emacs)
+;;     :prefix "SPC"
+;;     :global-prefix "C-SPC")
+
+;;   (ggiuanni/leader-keys
+;;    "t"  '(:ignore t :which-key "toggles")
+;;    "tt" '(counsel-load-theme :which-key "choose-theme")))
 
