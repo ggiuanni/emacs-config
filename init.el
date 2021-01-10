@@ -13,6 +13,12 @@
 ;; Set font
 (set-face-attribute 'default nil :font "Fira Code Retina")
 
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 1.0)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Fira Sans" :weight 'regular :height 1.2)
+
 ;; Make ESC quit propts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -39,7 +45,7 @@
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://epla.gnu.org/packages")))
+			 ("elpa" . "https://elpa.gnu.org/packages")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -60,7 +66,7 @@
  '(custom-safe-themes
    '("c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" default))
  '(package-selected-packages
-   '(evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
+   '(visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -225,3 +231,49 @@
 
 (use-package evil-magit
   :after magit)
+
+(defun ggiuanni/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(defun ggiuanni/org-font-setup ()
+  (dolist (face '((org-level-1 . 1.8)
+		(org-level-2 . 1.7)
+		(org-level-3 . 1.6)
+		(org-level-4 . 1.5)
+		(org-level-5 . 1.4)
+		(org-level-6 . 1.3)
+		(org-level-7 . 1.2)
+		(org-level-8 . 1.1)))
+  (set-face-attribute (car face) nil :font "Fira Sans" :weight 'regular :height (cdr face)))
+
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+  
+
+(use-package org
+  :hook (org-mode . ggiuanni/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾"
+	org-hide-emphasis-markers t)
+  (ggiuanni/org-font-setup))
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode))
+
+(defun ggiuanni/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+	visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . ggiuanni/org-mode-visual-fill))
+
