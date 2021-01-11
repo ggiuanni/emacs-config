@@ -71,7 +71,7 @@
  '(custom-safe-themes
    '("c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" default))
  '(package-selected-packages
-   '(visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
+   '(yasnippet-snippets yasnippet visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -388,3 +388,8 @@
 (use-package visual-fill-column
   :hook (org-mode . ggiuanni/org-mode-visual-fill))
 
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :config
+  (use-package yasnippet-snippets)
+  (yas-global-mode 1))
