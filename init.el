@@ -71,7 +71,7 @@
  '(custom-safe-themes
    '("c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" default))
  '(package-selected-packages
-   '(org-journal yasnippet-snippets yasnippet visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
+   '(powershell sound-wav org-pomodoro org-journal yasnippet-snippets yasnippet visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -402,3 +402,15 @@
   ;; (setq org-journal-prefix-key "C-c j ")
   :config
   (setq org-journal-dir "~/Google Drive/polymath/journal"))
+
+(use-package sound-wav)
+
+(use-package org-pomodoro
+  :config
+  (setq org-pomodoro-play-sounds t
+        org-pomodoro-start-sound-p t
+        org-pomodoro-finished-sound-p t
+        org-pomodoro-killed-sound-p t
+        org-pomodoro-short-break-sound-p t
+        org-pomodoro-long-break-sound-p t)
+  :custom (org-pomodoro-manual-break t))
