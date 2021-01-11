@@ -376,6 +376,10 @@
 
   (ggiuanni/org-font-setup))
 
+(ggiuanni/leader-keys
+   "o"  '(:ignore t :which-key "Org"))
+
+
 (use-package org-bullets
   :after org
   :hook (org-mode . org-bullets-mode))
@@ -402,6 +406,10 @@
   ;; (setq org-journal-prefix-key "C-c j ")
   :config
   (setq org-journal-dir "~/Google Drive/polymath/journal"))
+
+(ggiuanni/leader-keys
+ "oj" '(org-journal-new-entry :which-key "New Org Journal Entry"))
+
 
 (use-package sound-wav)
 
