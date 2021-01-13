@@ -233,6 +233,7 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+;; Org mode
 (defun ggiuanni/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
@@ -347,28 +348,28 @@
 
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/Google Drive/polymath/Tasks.org" "Inbox")
+      ("tt" "Task" entry (file+olp "~/Google Drive/Polymath/Tasks.org" "Inbox")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
       ("j" "Journal Entries")
       ("jj" "Journal" entry
-           (file+olp+datetree "~/Google Drive/polymath/Journal.org")
+           (file+olp+datetree "~/Google Drive/Polymath/Journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
            ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
            :clock-in :clock-resume
            :empty-lines 1)
       ("jm" "Meeting" entry
-           (file+olp+datetree "~/Google Drive/polymath/Journal.org")
+           (file+olp+datetree "~/Google Drive/Polymath/Journal.org")
            "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
            :clock-in :clock-resume
            :empty-lines 1)
 
       ("w" "Workflows")
-      ("we" "Checking Email" entry (file+olp+datetree "~/Google Drive/polymath/Journal.org")
+      ("we" "Checking Email" entry (file+olp+datetree "~/Google Drive/Polymath/Journal.org")
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
       ("m" "Metrics Capture")
-      ("mw" "Weight" table-line (file+headline "~/Google Drive/polymath/Metrics.org" "Weight")
+      ("mw" "Weight" table-line (file+headline "~/Google Drive/Polymath/Metrics.org" "Weight")
        "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
   (define-key global-map (kbd "C-c j")
@@ -405,7 +406,7 @@
   ;; Change default prefix key; needs to be set before loading org-journal
   ;; (setq org-journal-prefix-key "C-c j ")
   :config
-  (setq org-journal-dir "~/Google Drive/polymath/journal"))
+  (setq org-journal-dir "~/Google Drive/Polymath/journal"))
 
 (ggiuanni/leader-keys
  "oj" '(org-journal-new-entry :which-key "New Org Journal Entry"))
