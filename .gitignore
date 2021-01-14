@@ -55,3 +55,10 @@ projectile*
 
 # network security
 /network-security.data
+
+# Emacs cache
+cache/
+bookmarks
+
+# Org roam
+org-roam.db

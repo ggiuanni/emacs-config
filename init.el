@@ -71,7 +71,7 @@
  '(custom-safe-themes
    '("c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" default))
  '(package-selected-packages
-   '(powershell sound-wav org-pomodoro org-journal yasnippet-snippets yasnippet visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
+   '(org-roam powershell sound-wav org-pomodoro org-journal yasnippet-snippets yasnippet visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -273,10 +273,13 @@
   (setq org-agenda-files
 	'("~/Google Drive/Agenda/Tasks.org"))
 
+  (setq org-refile-targets
+	'(("Archive.org" :maxlevel . 1)))
+
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
       ("tt" "Task" entry (file+olp "~/Google Drive/Agenda/Tasks.org" "Inbox")
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)))
+           "* TODO %?\n  %U" :empty-lines 1)))
 
   (define-key global-map (kbd "C-c t")
     (lambda () (interactive) (org-capture nil "tt")))
@@ -339,3 +342,17 @@
 (ggiuanni/leader-keys
  "op" '(org-pomodoro :which-key "Org pomodoro"))
 
+;; Org-roam
+(use-package org-roam
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "~/Google Drive/Polymath/")
+  :bind (:map org-roam-mode-map
+	      (("C-c n l" . org-roam)
+	       ("C-c n f" . org-roam-find-file)
+	       ("C-c n g" . org-roam-graph))
+	      :map org-mode-map
+	      (("C-c n i" . org-roam-insert))
+	      (("C-c n I" . org-roam-insert-immediate))))
