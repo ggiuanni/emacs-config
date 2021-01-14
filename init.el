@@ -278,13 +278,19 @@
       ("tt" "Task" entry (file+olp "~/Google Drive/Agenda/Tasks.org" "Inbox")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)))
 
-  (define-key global-map (kbd "C-c j")
+  (define-key global-map (kbd "C-c t")
     (lambda () (interactive) (org-capture nil "tt")))
+
+  (which-key-add-key-based-replacements
+    "C-c t" "Capture task")
 
   (ggiuanni/org-font-setup))
 
 (ggiuanni/leader-keys
    "o"  '(:ignore t :which-key "Org"))
+
+(ggiuanni/leader-keys
+  "oc" '(org-capture :which-key "Org Capture"))
 
 
 (use-package org-bullets
@@ -329,3 +335,7 @@
         org-pomodoro-short-break-sound-p t
         org-pomodoro-long-break-sound-p t)
   :custom (org-pomodoro-manual-break t))
+
+(ggiuanni/leader-keys
+ "op" '(org-pomodoro :which-key "Org pomodoro"))
+
