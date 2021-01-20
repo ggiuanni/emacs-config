@@ -274,12 +274,13 @@
 	'("~/Google Drive/Agenda/Tasks.org"))
 
   (setq org-refile-targets
-	'(("Archive.org" :maxlevel . 1)))
+	'(("Archive.org" :maxlevel . 1)
+	  ("Tasks.org" :maxlevel . 1)))
 
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
       ("tt" "Task" entry (file+olp "~/Google Drive/Agenda/Tasks.org" "Inbox")
-           "* TODO %?\n  %U" :empty-lines 1)))
+           "* TODO %?" :empty-lines 1)))
 
   (define-key global-map (kbd "C-c t")
     (lambda () (interactive) (org-capture nil "tt")))
@@ -293,7 +294,10 @@
    "o"  '(:ignore t :which-key "Org"))
 
 (ggiuanni/leader-keys
-  "oc" '(org-capture :which-key "Org Capture"))
+  "oc" '(org-capture :which-key "Capture"))
+
+(ggiuanni/leader-keys
+  "oa" '(org-agenda :which-key "Agenda"))
 
 
 (use-package org-bullets
@@ -321,10 +325,10 @@
   ;; Change default prefix key; needs to be set before loading org-journal
   ;; (setq org-journal-prefix-key "C-c j ")
   :config
-  (setq org-journal-dir "~/Google Drive/Polymath/journal"))
+  (setq org-journal-dir "~/Google Drive/journal"))
 
 (ggiuanni/leader-keys
- "oj" '(org-journal-new-entry :which-key "New Org Journal Entry"))
+ "oj" '(org-journal-new-entry :which-key "New Journal Entry"))
 
 
 (use-package sound-wav)
@@ -340,7 +344,7 @@
   :custom (org-pomodoro-manual-break t))
 
 (ggiuanni/leader-keys
- "op" '(org-pomodoro :which-key "Org pomodoro"))
+ "op" '(org-pomodoro :which-key "Pomodoro"))
 
 ;; Org-roam
 (use-package org-roam
@@ -352,7 +356,17 @@
   :bind (:map org-roam-mode-map
 	      (("C-c n l" . org-roam)
 	       ("C-c n f" . org-roam-find-file)
-	       ("C-c n g" . org-roam-graph))
+	       ("C-c n g" . org-roam-graph)
+	       ("C-c n d" . org-roam-dailies-capture-today))
 	      :map org-mode-map
 	      (("C-c n i" . org-roam-insert))
 	      (("C-c n I" . org-roam-insert-immediate))))
+
+(setq org-roam-dailies-directory "daily/")
+
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         #'org-roam-capture--get-point
+         "* %?"
+         :file-name "daily/%<%Y-%m-%d>"
+         :head "#+title: %<%Y-%m-%d>\n\n")))
