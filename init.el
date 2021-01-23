@@ -26,6 +26,9 @@
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
+;; Display time
+(display-time-mode 1)
+
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
 		term-mode-hook
