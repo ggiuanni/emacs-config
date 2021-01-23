@@ -271,7 +271,12 @@
   (setq org-log-into-drawer t)
 
   (setq org-agenda-files
-	'("~/Google Drive/Agenda/Tasks.org"))
+	'("~/Google Drive/Agenda/Tasks.org")
+	'("~/Google Drive/Agenda/Work.org")
+	'("~/Google Drive/Agenda/Calisthenics.org")
+	'("~/Google Drive/Agenda/Unreal.org")
+	'("~/Google Drive/Agenda/Cpp.org")
+	'("~/Google Drive/Agenda/Drawing.org"))
 
   (setq org-refile-targets
 	'(("Archive.org" :maxlevel . 1)
