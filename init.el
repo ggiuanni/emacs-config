@@ -28,6 +28,7 @@
 
 ;; Display time
 (display-time-mode 1)
+(setq display-time-format "%H:%M")
 
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
