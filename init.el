@@ -278,8 +278,7 @@
 	(directory-files-recursively "~/Google Drive/Agenda" "\\.org$"))
 
   (setq org-refile-targets
-	'(("Archive.org" :maxlevel . 1)
-	  ("Tasks.org" :maxlevel . 1)))
+	'((org-agenda-files :maxlevel . 1)))
 
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
