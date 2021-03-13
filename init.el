@@ -84,7 +84,7 @@
  )
 
 ;; Logging commands (not really necessary)
-(use-package command-log-mode)
+;; (use-package command-log-mode)
 
 ;; Use Ivy and Councel for completition
 (use-package counsel
