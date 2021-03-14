@@ -74,6 +74,8 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" default))
+ '(org-agenda-files
+   '("~/Google Drive/Agenda/P90.org" "~/Google Drive/Agenda/P90X3.org"))
  '(package-selected-packages
    '(org-roam powershell sound-wav org-pomodoro org-journal yasnippet-snippets yasnippet visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
 (custom-set-faces
@@ -374,3 +376,6 @@
          "* %?"
          :file-name "daily/%<%Y-%m-%d>"
          :head "#+title: %<%Y-%m-%d>\n\n")))
+
+(which-key-add-key-based-replacements
+    "C-c n" "Org Roam")
