@@ -284,7 +284,7 @@
 
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/Google Drive/Agenda/Tasks.org" "Inbox")
+      ("tt" "Task" entry (file+olp "~/Google Drive/Agenda/Main.org" "Inbox")
            "* TODO %?" :empty-lines 1)))
 
   (define-key global-map (kbd "C-c t")
