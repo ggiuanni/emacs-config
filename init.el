@@ -7,6 +7,12 @@
 (set-fringe-mode 10) ; Give some breathing room
 (menu-bar-mode -1)   ; Disable menu bar
 
+;; UTF-8 as default encoding
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+
 ;; Set up visual bell
 (setq visible-bell t)
 
@@ -285,10 +291,17 @@
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
       ("tt" "Task" entry (file+olp "~/Google Drive/Agenda/Main.org" "Inbox")
-           "* TODO %?" :empty-lines 1)))
+       "* TODO %?" :empty-lines 1)
+      ("q" "Quick note" entry (file+olp "~/Google Drive/Post-it/QuickNotes.org" "Random")
+           "* %?" :empty-lines 1))
+    )
 
   (define-key global-map (kbd "C-c t")
     (lambda () (interactive) (org-capture nil "tt")))
+
+  (define-key global-map (kbd "C-c q")
+    (lambda () (interactive) (org-capture nil "q")))
+
 
   (which-key-add-key-based-replacements
     "C-c t" "Capture task")
@@ -296,14 +309,9 @@
   (ggiuanni/org-font-setup))
 
 (ggiuanni/leader-keys
-   "o"  '(:ignore t :which-key "Org"))
-
-(ggiuanni/leader-keys
-  "oc" '(org-capture :which-key "Capture"))
-
-(ggiuanni/leader-keys
-  "oa" '(org-agenda :which-key "Agenda"))
-
+   "o"  '(:ignore t :which-key "Org")
+   "oc" '(org-capture :which-key "Capture")
+   "oa" '(org-agenda :which-key "Agenda"))
 
 (use-package org-bullets
   :after org
@@ -379,3 +387,10 @@
 
 (which-key-add-key-based-replacements
     "C-c n" "Org Roam")
+
+(ggiuanni/leader-keys
+   "or"  '(:ignore t :which-key "Org Roam")
+   "orb" '(org-roam :which-key "Org Roam Display Buffer")
+   "orf" '(org-roam-find-file :which-key "Org Roam Find File")
+   "org" '(org-roam-graph :which-key "Org Roam Graph")
+   "ord" '(org-roam-dailies-capture-today :which-key "Org Roam Capture Today"))
