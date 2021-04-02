@@ -13,6 +13,9 @@
 
 (setq visible-bell t)
 
+(setq electric-pair-preserve-balance nil)
+(electric-pair-mode t)
+
 (set-face-attribute 'default nil :font "CMU Typewriter Text" :height 110)
 (set-face-attribute 'fixed-pitch nil :font "CMU Typewriter Text" :height 1.0)
 (set-face-attribute 'variable-pitch nil :font "CMU Serif" :height 1.0)
@@ -27,7 +30,8 @@
 (dolist (mode '(org-mode-hook
 		term-mode-hook
 		shell-mode-hook
-		eshell-mode-hook))
+		eshell-mode-hook
+		treemacs-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (defun kill-other-buffers ()
@@ -39,7 +43,7 @@
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages")))
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -63,7 +67,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(which-key counsel ivy-rich ivy rainbow-delimiters doom-themes doom-modeline use-package)))
+   '(treemacs-projectile projectile lsp-ivy lsp-treemacs company-box company company-lsp company-mode magit lsp-mode which-key counsel ivy-rich ivy rainbow-delimiters doom-themes doom-modeline use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -108,3 +112,60 @@
   (prog-mode . rainbow-delimiters-mode))
 
 (use-package magit)
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook
+  (c++-mode . lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :config
+  (lsp-enable-which-key-integration t))
+
+;; (use-package lsp-ui
+;;   :hook (lsp-mode . lsp-ui-mode))
+
+(use-package lsp-treemacs
+  :after lsp-mode
+  :init
+  (lsp-treemacs-sync-mode 1))
+
+(use-package lsp-ivy)
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind
+  (:map company-active-map
+	("<tab>" . company-complete-selection))
+  (:map lsp-mode-map
+	("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode 1)
+  :config
+  (setq projectile-project-search-path '("C:/dev/"))
+  :bind (:map projectile-mode-map
+	      ("C-c p" . projectile-command-map)))
+
+(use-package treemacs-projectile)
