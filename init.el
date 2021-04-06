@@ -1,130 +1,59 @@
-;;; BASIC
 (setq inhibit-startup-message t)
 
-(scroll-bar-mode -1) ; Disable visible scrollbar
-(tool-bar-mode -1)   ; Disable the toolbar
-(tooltip-mode -1)    ; Disable tooltips
-(set-fringe-mode 10) ; Give some breathing room
-(menu-bar-mode -1)   ; Disable menu bar
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(tooltip-mode -1)
+(set-fringe-mode 10)
 
-;; UTF-8 as default encoding
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
-;; Set up visual bell
 (setq visible-bell t)
 
-;; Set font
-(set-face-attribute 'default nil :font "Fira Code Retina")
+(setq electric-pair-preserve-balance nil)
+(electric-pair-mode t)
 
-;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 1.0)
+(set-face-attribute 'default nil :font "CMU Typewriter Text" :height 110)
+(set-face-attribute 'fixed-pitch nil :font "CMU Typewriter Text" :height 1.0)
+(set-face-attribute 'variable-pitch nil :font "CMU Serif" :height 1.2)
 
-;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Fira Sans" :weight 'regular :height 1.2)
-
-;; Make ESC quit propts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; Show line numbers
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
-;; Display time
-(display-time-mode 1)
 (setq display-time-format "%H:%M")
+(setq display-time-default-load-average nil)
+(display-time-mode 1)
 
-;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
 		term-mode-hook
 		shell-mode-hook
-		eshell-mode-hook))
+		eshell-mode-hook
+		treemacs-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-;; Function for killing all "other" buffers
 (defun kill-other-buffers ()
-      "Kill all other buffers."
-      (interactive)
-      (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
-;;; Packages
-
-;; TIPS
-;; 1. If say "package XYZ...zip not found"
-;; launch command "list-packages". It will update the package list
-
-;; Initialize package sources
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages")))
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 
-;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" default))
- '(org-agenda-files
-   '("~/Google Drive/Agenda/P90.org" "~/Google Drive/Agenda/P90X3.org"))
- '(package-selected-packages
-   '(org-roam powershell sound-wav org-pomodoro org-journal yasnippet-snippets yasnippet visual-fill-column visual-fill org-bullets forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline ivy command-log-mode use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-;; Logging commands (not really necessary)
-;; (use-package command-log-mode)
-
-;; Use Ivy and Councel for completition
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (setq ivy-initial-inputs-alist nil)) ; Don't start searches with ^
-
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
-	 ("C-d" . ivy-switch-buffer-kill)
-	 :map ivy-reverse-i-search-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
-
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
 
 ;; NOTE: The first time you load your configuration on a new machine, you'll
 ;; need to run the following command interactively so that mode line icons
@@ -132,49 +61,120 @@
 ;;
 ;; M-x all-the-icons-install-fonts
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(magit-gitflow org-roam evil-collection evil org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets treemacs-projectile projectile lsp-ivy lsp-treemacs company-box company company-lsp company-mode magit lsp-mode which-key counsel ivy-rich ivy rainbow-delimiters doom-themes doom-modeline use-package)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(use-package counsel
+  :config
+  (ivy-mode 1)
+  :bind (("M-x" . counsel-M-x)
+	 ("C-x b" . counsel-ibuffer)
+	 ("C-x C-f" . counsel-find-file)
+	 ("C-s" . swiper)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history)
+	 :map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done))
+  :custom
+  (ivy-initial-inputs-alist nil)
+  (ivy-use-virtual-buffers t)
+  (ivy-count-format "(%d/%d) "))
+
+(use-package which-key
+  :init
+  (which-key-mode 1)
+  :custom
+  (which-key-idle-delay 0.3))
+
 (use-package all-the-icons)
 
-;; Doom modeline
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
 
-;; Doom themes
 (use-package doom-themes
-  :init (load-theme 'doom-palenight t))
+  :init
+  (load-theme 'doom-dracula t))
 
-;; Colored Parenthesis
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
 
-;; Show possible keys after a base command (Ex. C-x)
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay  0.3))
+(use-package magit)
 
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
+(use-package magit-gitflow
+  :after magit
+  :hook
+  (magit-mode . turn-on-magit-gitflow))
+
+(use-package treemacs
+  :ensure t
+  :defer t
   :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
 
-;; General.el
-(use-package general
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook
+  (c++-mode . lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
   :config
-  (general-create-definer ggiuanni/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
+  (lsp-enable-which-key-integration t))
 
-  (ggiuanni/leader-keys
-   "t"  '(:ignore t :which-key "toggles")
-   "tt" '(counsel-load-theme :which-key "choose-theme")))
+;; (use-package lsp-ui
+;;   :hook (lsp-mode . lsp-ui-mode))
+
+(use-package lsp-treemacs
+  :after lsp-mode
+  :init
+  (lsp-treemacs-sync-mode 1))
+
+(use-package lsp-ivy)
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind
+  (:map company-active-map
+	("<tab>" . company-complete-selection))
+  (:map lsp-mode-map
+	("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode 1)
+  :config
+  (setq projectile-project-search-path '("C:/dev/"))
+  :bind (:map projectile-mode-map
+	      ("C-c p" . projectile-command-map))
+  :custom((projectile-completion-system 'ivy)))
+
+(use-package treemacs-projectile)
 
 ;; Evil mode
 (defun ggiuanni/evil-hook ()
@@ -213,38 +213,6 @@
   :config
   (evil-collection-init))
 
-;; Hydra for transient state key-bindings
-(use-package hydra)
-
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
-
-(ggiuanni/leader-keys
- "ts" '(hydra-text-scale/body :which-key "scale text"))
-
-;; Projectile
-(use-package projectile
-  :diminish projectile-mode
-  :config (projectile-mode)
-  :custom((projectile-completion-system 'ivy))
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :init
-  (when (file-directory-p "C:\dev")
-    (setq projectile-project-search-path '("C:\dev")))
-  (setq projectile-switch-project-action #'projectile-dired))
-
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
-  
-;; Magit
-(use-package magit
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
 ;; Org mode
 (defun ggiuanni/org-mode-setup ()
   (org-indent-mode)
@@ -261,7 +229,7 @@
 		  (org-level-6 . 1.3)
 		  (org-level-7 . 1.2)
 		  (org-level-8 . 1.1)))
-  (set-face-attribute (car face) nil :font "Fira Sans" :weight 'regular :height (cdr face)))
+  (set-face-attribute (car face) nil :font "CMU Serif" :weight 'regular :height (cdr face)))
 
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
 (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -306,12 +274,10 @@
   (which-key-add-key-based-replacements
     "C-c t" "Capture task")
 
-  (ggiuanni/org-font-setup))
+  (which-key-add-key-based-replacements
+    "C-c q" "Capture quick-note")
 
-(ggiuanni/leader-keys
-   "o"  '(:ignore t :which-key "Org")
-   "oc" '(org-capture :which-key "Capture")
-   "oa" '(org-agenda :which-key "Agenda"))
+  (ggiuanni/org-font-setup))
 
 (use-package org-bullets
   :after org
@@ -336,30 +302,11 @@
   :defer t
   :init
   ;; Change default prefix key; needs to be set before loading org-journal
-  ;; (setq org-journal-prefix-key "C-c j ")
+  (setq org-journal-prefix-key "C-c j")
   :config
   (setq org-journal-dir "~/Google Drive/journal"))
 
-(ggiuanni/leader-keys
- "oj" '(org-journal-new-entry :which-key "New Journal Entry"))
-
-
-(use-package sound-wav)
-
-(use-package org-pomodoro
-  :config
-  (setq org-pomodoro-play-sounds t
-        org-pomodoro-start-sound-p t
-        org-pomodoro-finished-sound-p t
-        org-pomodoro-killed-sound-p t
-        org-pomodoro-short-break-sound-p t
-        org-pomodoro-long-break-sound-p t)
-  :custom (org-pomodoro-manual-break t))
-
-(ggiuanni/leader-keys
- "op" '(org-pomodoro :which-key "Pomodoro"))
-
-;; Org-roam
+;; Org roam
 (use-package org-roam
   :ensure t
   :hook
@@ -370,40 +317,19 @@
   :bind (:map org-roam-mode-map
 	      (("C-c n l" . org-roam)
 	       ("C-c n f" . org-roam-find-file)
+	       ("C-c n c" . org-roam-capture)
 	       ("C-c n g" . org-roam-graph)
 	       ("C-c n d" . org-roam-dailies-capture-today))
 	      :map org-mode-map
 	      (("C-c n i" . org-roam-insert))
-	      (("C-c n I" . org-roam-insert-immediate))))
-
-(setq org-roam-dailies-directory "daily/")
-
-(setq org-roam-dailies-capture-templates
-      '(("d" "default" entry
-         #'org-roam-capture--get-point
-         "* %?"
-         :file-name "daily/%<%Y-%m-%d>"
-         :head "#+title: %<%Y-%m-%d>\n\n")))
-
-(which-key-add-key-based-replacements
-    "C-c n" "Org Roam")
-
-(ggiuanni/leader-keys
-   "or"  '(:ignore t :which-key "Org Roam")
-   "orb" '(org-roam :which-key "Org Roam Display Buffer")
-   "orf" '(org-roam-find-file :which-key "Org Roam Find File")
-   "org" '(org-roam-graph :which-key "Org Roam Graph")
-   "ord" '(org-roam-dailies-capture-today :which-key "Org Roam Capture Today"))
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)))
-
-(setq org-confirm-babel-evaulate nil)
-
-(require 'org-tempo)
-
-(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("py" . "src python"))
+	      (("C-c n I" . org-roam-insert-immediate)))
+  :config
+  (setq org-roam-dailies-directory "daily/")
+  (setq org-roam-dailies-capture-templates
+	'(("d" "default" entry
+           #'org-roam-capture--get-point
+           "* %?"
+           :file-name "daily/%<%Y-%m-%d>"
+           :head "#+title: %<%Y-%m-%d>\n\n")))
+  (which-key-add-key-based-replacements
+    "C-c n" "Org Roam"))
