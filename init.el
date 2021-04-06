@@ -269,6 +269,9 @@
   (which-key-add-key-based-replacements
     "C-c t" "Capture task")
 
+  (which-key-add-key-based-replacements
+    "C-c q" "Capture quick-note")
+
   (ggiuanni/org-font-setup))
 
 (use-package org-bullets
