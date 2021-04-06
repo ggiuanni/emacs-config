@@ -67,7 +67,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(org-roam evil-collection evil org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets treemacs-projectile projectile lsp-ivy lsp-treemacs company-box company company-lsp company-mode magit lsp-mode which-key counsel ivy-rich ivy rainbow-delimiters doom-themes doom-modeline use-package)))
+   '(magit-gitflow org-roam evil-collection evil org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets treemacs-projectile projectile lsp-ivy lsp-treemacs company-box company company-lsp company-mode magit lsp-mode which-key counsel ivy-rich ivy rainbow-delimiters doom-themes doom-modeline use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -112,6 +112,11 @@
   (prog-mode . rainbow-delimiters-mode))
 
 (use-package magit)
+
+(use-package magit-gitflow
+  :after magit
+  :hook
+  (magit-mode . turn-on-magit-gitflow))
 
 (use-package treemacs
   :ensure t
