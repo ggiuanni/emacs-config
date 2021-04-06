@@ -18,7 +18,7 @@
 
 (set-face-attribute 'default nil :font "CMU Typewriter Text" :height 110)
 (set-face-attribute 'fixed-pitch nil :font "CMU Typewriter Text" :height 1.0)
-(set-face-attribute 'variable-pitch nil :font "CMU Serif" :height 1.1)
+(set-face-attribute 'variable-pitch nil :font "CMU Serif" :height 1.2)
 
 (column-number-mode)
 (global-display-line-numbers-mode t)
@@ -67,7 +67,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(evil-collection evil org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets treemacs-projectile projectile lsp-ivy lsp-treemacs company-box company company-lsp company-mode magit lsp-mode which-key counsel ivy-rich ivy rainbow-delimiters doom-themes doom-modeline use-package)))
+   '(org-roam evil-collection evil org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets treemacs-projectile projectile lsp-ivy lsp-treemacs company-box company company-lsp company-mode magit lsp-mode which-key counsel ivy-rich ivy rainbow-delimiters doom-themes doom-modeline use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -300,3 +300,31 @@
   (setq org-journal-prefix-key "C-c j")
   :config
   (setq org-journal-dir "~/Google Drive/journal"))
+
+;; Org roam
+(use-package org-roam
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "~/Google Drive/Polymath/")
+  (org-roam-db-update-method 'immediate)
+  :bind (:map org-roam-mode-map
+	      (("C-c n l" . org-roam)
+	       ("C-c n f" . org-roam-find-file)
+	       ("C-c n c" . org-roam-capture)
+	       ("C-c n g" . org-roam-graph)
+	       ("C-c n d" . org-roam-dailies-capture-today))
+	      :map org-mode-map
+	      (("C-c n i" . org-roam-insert))
+	      (("C-c n I" . org-roam-insert-immediate)))
+  :config
+  (setq org-roam-dailies-directory "daily/")
+  (setq org-roam-dailies-capture-templates
+	'(("d" "default" entry
+           #'org-roam-capture--get-point
+           "* %?"
+           :file-name "daily/%<%Y-%m-%d>"
+           :head "#+title: %<%Y-%m-%d>\n\n")))
+  (which-key-add-key-based-replacements
+    "C-c n" "Org Roam"))
