@@ -76,7 +76,7 @@
  )
 
 (use-package counsel
-  :config
+  :init
   (ivy-mode 1)
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
@@ -85,7 +85,17 @@
 	 :map minibuffer-local-map
 	 ("C-r" . 'counsel-minibuffer-history)
 	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done))
+	 ("TAB" . ivy-alt-done)
+	 ("C-l" . ivy-alt-done)
+	 ("C-j" . ivy-next-line)
+	 ("C-k" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-l" . ivy-done)
+	 ("C-d" . ivy-switch-buffer-kill)
+	 :map ivy-reverse-i-search-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-d" . ivy-reverse-i-search-kill))
   :custom
   (ivy-initial-inputs-alist nil)
   (ivy-use-virtual-buffers t)
@@ -246,9 +256,12 @@
   (setq org-ellipsis " ▾"
 	org-hide-emphasis-markers t)
 
+  (setq org-link-frame-setup '((file . find-file)))
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
+
+  (define-key global-map (kbd "C-c a") 'org-agenda)
 
   (setq org-agenda-files
 	(directory-files-recursively "~/Google Drive/Agenda" "\\.org$"))
@@ -313,7 +326,6 @@
   (after-init . org-roam-mode)
   :custom
   (org-roam-directory "~/Google Drive/Polymath/")
-  (org-roam-db-update-method 'immediate)
   :bind (:map org-roam-mode-map
 	      (("C-c n l" . org-roam)
 	       ("C-c n f" . org-roam-find-file)
