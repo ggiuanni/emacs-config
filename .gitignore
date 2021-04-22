@@ -62,3 +62,9 @@ bookmarks
 
 # Org roam
 org-roam.db
+
+# Treemacs
+.cache
+
+# LSP
+.lsp-session*
