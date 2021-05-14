@@ -146,7 +146,6 @@ If the new path's directories does not exist, create them."
 
 (use-package treemacs
   :ensure t
-  :defer t
   :bind
   (:map global-map
         ("M-0"       . treemacs-select-window)
@@ -255,7 +254,7 @@ If the new path's directories does not exist, create them."
 		  (org-level-6 . 1.3)
 		  (org-level-7 . 1.2)
 		  (org-level-8 . 1.1)))
-  (set-face-attribute (car face) nil :font "CMU Serif" :weight 'regular :height (cdr face)))
+  (set-face-attribute (car face) nil :weight 'bold :height (cdr face)))
 
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
 (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -267,10 +266,10 @@ If the new path's directories does not exist, create them."
 (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
 (use-package org
+  :ensure t
   :hook (org-mode . ggiuanni/org-mode-setup)
   :config
-  (setq org-ellipsis " ▾"
-	org-hide-emphasis-markers t)
+  (setq org-hide-emphasis-markers t)
 
   (setq org-link-frame-setup '((file . find-file)))
   (setq org-agenda-start-with-log-mode t)
@@ -310,7 +309,9 @@ If the new path's directories does not exist, create them."
 
 (use-package org-bullets
   :after org
-  :hook (org-mode . org-bullets-mode))
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉")))
 
 (defun ggiuanni/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -328,36 +329,8 @@ If the new path's directories does not exist, create them."
 
 (use-package org-journal
   :ensure t
-  :defer t
   :init
   ;; Change default prefix key; needs to be set before loading org-journal
   (setq org-journal-prefix-key "C-c j")
   :config
   (setq org-journal-dir "~/Google Drive/journal"))
-
-;; Org roam
-(use-package org-roam
-  :ensure t
-  :hook
-  (after-init . org-roam-mode)
-  :custom
-  (org-roam-directory "~/Google Drive/Polymath/")
-  :bind (:map org-roam-mode-map
-	      (("C-c n l" . org-roam)
-	       ("C-c n f" . org-roam-find-file)
-	       ("C-c n c" . org-roam-capture)
-	       ("C-c n g" . org-roam-graph)
-	       ("C-c n d" . org-roam-dailies-capture-today))
-	      :map org-mode-map
-	      (("C-c n i" . org-roam-insert))
-	      (("C-c n I" . org-roam-insert-immediate)))
-  :config
-  (setq org-roam-dailies-directory "daily/")
-  (setq org-roam-dailies-capture-templates
-	'(("d" "default" entry
-           #'org-roam-capture--get-point
-           "* %?"
-           :file-name "daily/%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>\n\n")))
-  (which-key-add-key-based-replacements
-    "C-c n" "Org Roam"))
