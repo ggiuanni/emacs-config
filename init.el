@@ -93,11 +93,11 @@ If the new path's directories does not exist, create them."
 
 (use-package all-the-icons)
 
+(use-package dracula-theme
+  :init (load-theme 'dracula t))
+
 (use-package doom-modeline
   :init (doom-modeline-mode 1))
-
-(use-package doom-themes
-  :init (load-theme 'doom-dracula t))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
