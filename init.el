@@ -76,7 +76,7 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package)))
+   '(org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -191,3 +191,9 @@ If the new path's directories does not exist, create them."
 
 (use-package visual-fill-column
   :hook (org-mode . org-mode-visual-fill))
+
+(use-package org-journal
+  :custom
+  (org-journal-dir "~/Google Drive/journal")
+  (org-journal-find-file 'find-file))
+  
