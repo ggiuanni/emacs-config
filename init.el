@@ -76,7 +76,7 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package)))
+   '(treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -108,6 +108,16 @@ If the new path's directories does not exist, create them."
 
 (use-package yasnippet-snippets
   :after yasnippet)
+
+(use-package treemacs
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
 
 ;; Deferred load packages
 (use-package counsel
