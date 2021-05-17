@@ -186,7 +186,10 @@ If the new path's directories does not exist, create them."
   :hook (org-mode . org-mode-setup)
   :bind ("C-c a" . org-agenda)
   :config
-  (org-font-setup))
+  (org-font-setup)
+  :custom
+  (org-agenda-files
+   (directory-files-recursively "~/Google Drive/Agenda" "\\.org$")))
 
 (use-package org-bullets
   :after org
