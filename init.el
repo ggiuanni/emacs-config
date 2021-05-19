@@ -77,7 +77,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flycheck lsp-ui company-box lsp-treemacs lsp-ivy company company-mode lsp-mode treemacs-projectile projectile ivy-rich treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
+    (nyan-mode flycheck lsp-ui company-box lsp-treemacs lsp-ivy company company-mode lsp-mode treemacs-projectile projectile ivy-rich treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -97,7 +97,11 @@ If the new path's directories does not exist, create them."
   :init (load-theme 'dracula t))
 
 (use-package doom-modeline
-  :init (doom-modeline-mode 1))
+  :hook
+  (after-init . doom-modeline-mode))
+
+(use-package nyan-mode
+  :hook (doom-modeline-mode . nyan-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -258,4 +262,6 @@ If the new path's directories does not exist, create them."
   (company-idle-delay 0.0))
 
 (use-package company-box
+  :after company
   :hook (company-mode . company-box-mode))
+
