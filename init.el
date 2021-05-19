@@ -76,7 +76,8 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package)))
+   (quote
+    (treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -189,7 +190,7 @@ If the new path's directories does not exist, create them."
   (org-font-setup)
   :custom
   (org-agenda-files
-   (directory-files-recursively "~/Google Drive/Agenda" "\\.org$")))
+   (directory-files-recursively "~/Polymath/Agenda" "\\.org$")))
 
 (use-package org-bullets
   :after org
@@ -207,6 +208,6 @@ If the new path's directories does not exist, create them."
 
 (use-package org-journal
   :custom
-  (org-journal-dir "~/Google Drive/journal")
+  (org-journal-dir "~/Polymath/Journal")
   (org-journal-find-file 'find-file))
   
