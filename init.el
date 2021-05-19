@@ -77,7 +77,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
+    (treemacs-projectile projectile ivy-rich treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -85,7 +85,6 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  )
 
-;; Load on startup packages
 (use-package which-key
   :init
   (which-key-mode 1)
@@ -120,7 +119,6 @@ If the new path's directories does not exist, create them."
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-;; Deferred load packages
 (use-package counsel
   :init
   (ivy-mode 1)
@@ -146,6 +144,21 @@ If the new path's directories does not exist, create them."
   (ivy-initial-inputs-alist nil)
   (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) "))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+(use-package projectile
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map))
+  :custom
+  (projectile-project-search-path '("~/")))
+
+(use-package treemacs-projectile)
 
 (use-package magit
   :bind ("C-x g" . magit-status))
