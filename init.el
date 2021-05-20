@@ -101,7 +101,12 @@ If the new path's directories does not exist, create them."
   (after-init . doom-modeline-mode))
 
 (use-package nyan-mode
-  :hook (doom-modeline-mode . nyan-mode))
+  :hook (doom-modeline-mode . nyan-mode)
+  :custom
+  (nyan-animate-nyancat t)
+  (nyan-wavy-trail t)
+  (nyan-bar-length 90)
+  (nyan-minimum-window-width 150))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
