@@ -105,8 +105,8 @@ If the new path's directories does not exist, create them."
   :custom
   (nyan-animate-nyancat t)
   (nyan-wavy-trail t)
-  (nyan-bar-length 90)
-  (nyan-minimum-window-width 150))
+  (nyan-bar-length 60)
+  (nyan-minimum-window-width 64))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
