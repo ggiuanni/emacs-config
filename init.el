@@ -77,7 +77,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
+    (nyan-mode flycheck lsp-ui company-box lsp-treemacs lsp-ivy company company-mode lsp-mode treemacs-projectile projectile ivy-rich treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -85,7 +85,6 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  )
 
-;; Load on startup packages
 (use-package which-key
   :init
   (which-key-mode 1)
@@ -98,7 +97,16 @@ If the new path's directories does not exist, create them."
   :init (load-theme 'dracula t))
 
 (use-package doom-modeline
-  :init (doom-modeline-mode 1))
+  :hook
+  (after-init . doom-modeline-mode))
+
+(use-package nyan-mode
+  ;:hook (doom-modeline-mode . nyan-mode)
+  :custom
+  (nyan-animate-nyancat t)
+  (nyan-wavy-trail t)
+  (nyan-bar-length 130)
+  (nyan-minimum-window-width 100))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -110,6 +118,9 @@ If the new path's directories does not exist, create them."
 (use-package yasnippet-snippets
   :after yasnippet)
 
+(use-package flycheck
+  :init (global-flycheck-mode))
+
 (use-package treemacs
   :bind
   (:map global-map
@@ -120,7 +131,6 @@ If the new path's directories does not exist, create them."
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-;; Deferred load packages
 (use-package counsel
   :init
   (ivy-mode 1)
@@ -146,6 +156,21 @@ If the new path's directories does not exist, create them."
   (ivy-initial-inputs-alist nil)
   (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) "))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+(use-package projectile
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map))
+  :custom
+  (projectile-project-search-path '("~/")))
+
+(use-package treemacs-projectile)
 
 (use-package magit
   :bind ("C-x g" . magit-status))
@@ -210,4 +235,38 @@ If the new path's directories does not exist, create them."
   :custom
   (org-journal-dir "~/Polymath/Journal")
   (org-journal-find-file 'find-file))
-  
+
+
+(defun lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((c++-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration)
+	 (lsp-mode . lsp-mode-setup))
+  :commands lsp)
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode))
+
+(use-package lsp-treemacs
+  :after lsp)
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :after company
+  :hook (company-mode . company-box-mode))
+
