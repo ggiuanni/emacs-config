@@ -210,12 +210,16 @@ If the new path's directories does not exist, create them."
 (use-package org
   :commands org-mode
   :hook (org-mode . org-mode-setup)
-  :bind ("C-c a" . org-agenda)
+  :bind (("C-c a" . org-agenda)
+	 ("C-c c" . org-capture))
   :config
   (org-font-setup)
   :custom
   (org-agenda-files
-   (directory-files-recursively "~/Polymath/Agenda" "\\.org$")))
+   (directory-files-recursively "~/Polymath/Agenda" "\\.org$"))
+  (org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/Polymath/Agenda/Inbox.org" "Tasks")
+         "* TODO %?\n  %i"))))
 
 (use-package org-bullets
   :after org
