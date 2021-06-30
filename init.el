@@ -219,9 +219,9 @@ If the new path's directories does not exist, create them."
    (directory-files-recursively "~/Polymath/Agenda" "\\.org$"))
   (org-capture-templates
       '(("t" "Todo" entry (file+headline "~/Polymath/Agenda/Inbox.org" "Tasks")
-         "* TODO %?\n  %i")
+         "* TODO %?\n")
 	("r" "Random Thought" entry (file+headline "~/Polymath/Agenda/Inbox.org" "Random Thoughts")
-	 "* %?\n %i"))))
+	 "* %?\n"))))
 
 (use-package org-bullets
   :after org
