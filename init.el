@@ -216,15 +216,15 @@ If the new path's directories does not exist, create them."
   (org-font-setup)
   :custom
   (org-agenda-files
-   (directory-files-recursively "~/Polymath/Agenda" "\\.org$"))
+   (directory-files-recursively (concat (getenv "Polymath") "/Agenda") "\\.org$"))
   (org-refile-targets
-   '(("~/Polymath/Agenda/Archive.org" :maxlevel . 3)
-     ("~/Polymath/Agenda/Calendar.org" :maxlevel . 3)
-     ("~/Polymath/Agenda/Deadlines.org" :maxlevel . 3)
-     ("~/Polymath/Agenda/Todo.org" :maxlevel . 3)
-     ("~/Polymath/Agenda/Projects.org" :maxlevel . 3)))
+   `((,(concat (getenv "Polymath") "/Agenda/Archive.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Calendar.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Deadlines.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Todo.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Projects.org") :maxlevel . 3)))
   (org-capture-templates
-   '(("i" "Inbox" entry (file+headline "~/Polymath/Agenda/Inbox.org" "Inbox")
+   `(("i" "Inbox" entry (file+headline ,(concat (getenv "Polymath") "/Agenda/Inbox.org") "Inbox")
       "* %?\n"))))
 
 (use-package org-bullets
