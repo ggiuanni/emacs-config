@@ -210,12 +210,22 @@ If the new path's directories does not exist, create them."
 (use-package org
   :commands org-mode
   :hook (org-mode . org-mode-setup)
-  :bind ("C-c a" . org-agenda)
+  :bind (("C-c a" . org-agenda)
+	 ("C-c c" . org-capture))
   :config
   (org-font-setup)
   :custom
   (org-agenda-files
-   (directory-files-recursively "~/Polymath/Agenda" "\\.org$")))
+   (directory-files-recursively (concat (getenv "Polymath") "/Agenda") "\\.org$"))
+  (org-refile-targets
+   `((,(concat (getenv "Polymath") "/Agenda/Archive.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Calendar.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Deadlines.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Todo.org") :maxlevel . 3)
+     (,(concat (getenv "Polymath") "/Agenda/Projects.org") :maxlevel . 3)))
+  (org-capture-templates
+   `(("i" "Inbox" entry (file+headline ,(concat (getenv "Polymath") "/Agenda/Inbox.org") "Inbox")
+      "* %?\n"))))
 
 (use-package org-bullets
   :after org
