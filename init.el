@@ -221,11 +221,12 @@ If the new path's directories does not exist, create them."
    `((,(concat (getenv "Polymath") "/Agenda/Archive.org") :maxlevel . 3)
      (,(concat (getenv "Polymath") "/Agenda/Calendar.org") :maxlevel . 3)
      (,(concat (getenv "Polymath") "/Agenda/Deadlines.org") :maxlevel . 3)
-     (,(concat (getenv "Polymath") "/Agenda/Todo.org") :maxlevel . 3)
-     (,(concat (getenv "Polymath") "/Agenda/Projects.org") :maxlevel . 3)))
+     (,(concat (getenv "Polymath") "/Agenda/Todo.org") :maxlevel . 3)))
   (org-capture-templates
    `(("i" "Inbox" entry (file+headline ,(concat (getenv "Polymath") "/Agenda/Inbox.org") "Inbox")
-      "* %?\n"))))
+      "* %?\n")
+     ("t" "Todo" entry (file+headline ,(concat (getenv "Polymath") "/Agenda/Todo.org") "Todo")
+      "* TODO %?\n"))))
 
 (use-package org-bullets
   :after org
