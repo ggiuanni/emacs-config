@@ -16,7 +16,7 @@
 (setq electric-pair-preserve-balance nil)
 ;;(electric-pair-mode t)
 
-(set-face-attribute 'default nil :font "Fira Code" :height 100)
+(set-face-attribute 'default nil :font "Fira Code" :height 120)
 (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 1.0)
 (set-face-attribute 'variable-pitch nil :font "Fira Sans" :height 1.2)
 
@@ -315,13 +315,13 @@ If the new path's directories does not exist, create them."
 (require 'org-roam-node)
 (require 'seq)
 
-(defun my/org-roam-get-project-notes ()
+(defun my/org-roam-get-agenda-notes ()
   (interactive)
   (mapcar
    #'org-roam-node-file
    (seq-filter
     (lambda (node)
-      (member "Project" (org-roam-node-tags node)))
+      (member "Agenda" (org-roam-node-tags node)))
     (org-roam-node-list))))
 
 (setq org-directory "~/Polymath")
