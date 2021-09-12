@@ -75,9 +75,10 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" "b7e460a67bcb6cac0a6aadfdc99bdf8bbfca1393da535d4e8945df0648fa95fb" default))
  '(package-selected-packages
-   (quote
-    (nyan-mode flycheck lsp-ui company-box lsp-treemacs lsp-ivy company company-mode lsp-mode treemacs-projectile projectile ivy-rich treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package))))
+   '(org-roam nyan-mode flycheck lsp-ui company-box lsp-treemacs lsp-ivy company company-mode lsp-mode treemacs-projectile projectile ivy-rich treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -93,8 +94,8 @@ If the new path's directories does not exist, create them."
 
 (use-package all-the-icons)
 
-(use-package dracula-theme
-  :init (load-theme 'dracula t))
+(use-package doom-themes
+  :init (load-theme 'doom-outrun-electric t))
 
 (use-package doom-modeline
   :hook
@@ -213,20 +214,7 @@ If the new path's directories does not exist, create them."
   :bind (("C-c a" . org-agenda)
 	 ("C-c c" . org-capture))
   :config
-  (org-font-setup)
-  :custom
-  (org-agenda-files
-   (directory-files-recursively (concat (getenv "Polymath") "/Agenda") "\\.org$"))
-  (org-refile-targets
-   `((,(concat (getenv "Polymath") "/Agenda/Archive.org") :maxlevel . 3)
-     (,(concat (getenv "Polymath") "/Agenda/Calendar.org") :maxlevel . 3)
-     (,(concat (getenv "Polymath") "/Agenda/Deadlines.org") :maxlevel . 3)
-     (,(concat (getenv "Polymath") "/Agenda/Todo.org") :maxlevel . 3)))
-  (org-capture-templates
-   `(("i" "Inbox" entry (file+headline ,(concat (getenv "Polymath") "/Agenda/Inbox.org") "Inbox")
-      "* %?\n")
-     ("t" "Todo" entry (file+headline ,(concat (getenv "Polymath") "/Agenda/Todo.org") "Todo")
-      "* TODO %?\n"))))
+  (org-font-setup))
 
 (use-package org-bullets
   :after org
@@ -281,3 +269,60 @@ If the new path's directories does not exist, create them."
   :after company
   :hook (company-mode . company-box-mode))
 
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Polymath")
+  (org-roam-completion-everywhere t)
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+      :unnarrowed t)
+     ("l" "programming language" plain
+      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("b" "book notes" plain
+      "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+      :unnarrowed t)))
+  (org-roam-dailies-directory "daily/")
+  (org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %<%H:%M>\n%?"
+         :if-new (file+head "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+	 ("C-c n f" . org-roam-node-find)
+	 ("C-c n i" . org-roam-node-insert)
+	 :map org-mode-map
+	 ("C-M-i" . completion-at-point)
+	 :map org-roam-dailies-map
+	 ("Y" . org-roam-dailies-capture-yesterday)
+	 ("T" . org-roam-dailies-capture-tomorrow))
+  :bind-keymap
+  ("C-c n d" . org-roam-dailies-map)
+  :config
+  (require 'org-roam-dailies)
+  (org-roam-setup))
+
+(require 'org-roam-node)
+(require 'seq)
+
+(defun my/org-roam-get-project-notes ()
+  (interactive)
+  (mapcar
+   #'org-roam-node-file
+   (seq-filter
+    (lambda (node)
+      (member "Project" (org-roam-node-tags node)))
+    (org-roam-node-list))))
+
+(setq org-directory "~/Polymath")
+(setq org-agenda-files (my/org-roam-get-project-notes))
