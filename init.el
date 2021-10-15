@@ -279,23 +279,27 @@ If the new path's directories does not exist, create them."
   (org-roam-capture-templates
    '(("d" "default" plain
       "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
-      :unnarrowed t)
-     ("l" "programming language" plain
-      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
+      :unnarrowed t
+      :empty-lines 1)
+     ("t" "task" entry
+      "* TODO ${title}\n\n%?"
+      :target (node "Inbox")
+      :empty-lines 1
+      :kill-buffer)
      ("b" "book notes" plain
-      "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
+      "* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
-      :unnarrowed t)))
+      :unnarrowed t
+      :empty-lines 1)
+     ("p" "project" plain (file "~/Polymath/Templates/ProjectTemplate.org")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: :Project:Agenda")
+      :unnarrowed t
+      :empty-lines 1)))
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
       '(("d" "default" entry
-         "* %<%H:%M>\n%?"
+         "* %<%H:%M>\n\n%?"
          :if-new (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d>\n"))))
   :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -315,14 +319,22 @@ If the new path's directories does not exist, create them."
 (require 'org-roam-node)
 (require 'seq)
 
-(defun my/org-roam-get-agenda-notes ()
-  (interactive)
-  (mapcar
-   #'org-roam-node-file
-   (seq-filter
-    (lambda (node)
-      (member "Agenda" (org-roam-node-tags node)))
-    (org-roam-node-list))))
+;; The buffer you put this code in must have lexical-binding set to t!
+;; See the final configuration at the end for more details.
 
-(setq org-directory "~/Polymath")
-(setq org-agenda-files (my/org-roam-get-project-notes))
+(defun my/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun my/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (my/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+(defun my/org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files (my/org-roam-list-notes-by-tag "Agenda")))
+
+;; Build the agenda list the first time for the session
+(my/org-roam-refresh-agenda-list)
