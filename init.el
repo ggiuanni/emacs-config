@@ -334,7 +334,7 @@ If the new path's directories does not exist, create them."
 
 (defun my/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (my/org-roam-list-notes-by-tag "Agenda")))
+  (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project")))
 
 ;; Build the agenda list the first time for the session
 (my/org-roam-refresh-agenda-list)
