@@ -36,9 +36,9 @@ If the new path's directories does not exist, create them."
 (require 'package)
 
 (setq package-archives '(
-			 ("elpa" . "https://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
+			 ("org" . "https://orgmode.org/elpa/")
+			 ("elpa" . "https://elpa.gnu.org/packages/")
 			))
 
 (package-initialize)
@@ -112,7 +112,17 @@ If the new path's directories does not exist, create them."
 (use-package doom-modeline
   :ensure t
   :hook
-  (after-init . doom-modeline-mode))
+  (after-init . doom-modeline-mode)
+  :config
+  ;; Define your custom doom-modeline
+  (doom-modeline-def-modeline 'my-simple-line
+    '(bar matches buffer-info remote-host)
+    '(buffer-position parrot selection-info misc-info minor-modes input-method buffer-encoding major-mode process vcs checker))
+
+  ;; Add to `doom-modeline-mode-hook` or other hooks
+  (defun setup-custom-doom-modeline ()
+    (doom-modeline-set-modeline 'my-simple-line 'default))
+  (add-hook 'doom-modeline-mode-hook 'setup-custom-doom-modeline))
 
 (use-package emacsql-sqlite3
   :ensure t)
@@ -137,3 +147,14 @@ If the new path's directories does not exist, create them."
   :config
   (require 'org-roam-dailies)
   (org-roam-setup))
+
+(use-package nyan-mode
+  :ensure t
+  :hook (doom-modeline-mode)
+  :custom
+  (nyan-wavy-trail t)
+  (nyan-animate-nyancat t))
+
+(use-package parrot
+    :ensure t
+    :hook (doom-modeline-mode . parrot-mode))
