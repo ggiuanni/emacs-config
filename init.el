@@ -6,6 +6,9 @@
 (scroll-bar-mode -1)
 (global-display-line-numbers-mode 1)
 
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
 (set-face-attribute 'default nil :font "Roboto Mono")
 (set-face-attribute 'variable-pitch nil :font "Roboto Serif" :height 1.5)
 
@@ -141,7 +144,8 @@ If the new path's directories does not exist, create them."
                             "#+title: %<%Y-%m-%d>\n"))))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert))
+         ("C-c n i" . org-roam-node-insert)
+	 ("C-c n c" . org-roam-capture))
   :bind-keymap
   ("C-c n d" . org-roam-dailies-map)
   :config
