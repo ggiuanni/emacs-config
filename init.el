@@ -55,10 +55,12 @@ If the new path's directories does not exist, create them."
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; Rainbow Delimiters
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;; Ivy, Counsel, Swiper
 (use-package counsel
   :ensure t
   :init
@@ -69,6 +71,7 @@ If the new path's directories does not exist, create them."
   :custom
   (ivy-initial-inputs-alist nil))
 
+;; Which Key
 (use-package which-key
   :ensure t
   :init
@@ -76,6 +79,7 @@ If the new path's directories does not exist, create them."
   :custom
   (which-key-idle-delay 0.05))
 
+;; Org Mode
 (defun org-mode-setup ()
   (org-indent-mode)
 
@@ -95,10 +99,12 @@ If the new path's directories does not exist, create them."
   :custom
   (org-bullets-bullet-list '("◦")))
 
+;; Olivetti
 (use-package olivetti
   :ensure t
   :hook (org-mode . olivetti-mode))
 
+;; Snippets
 (use-package yasnippet
   :ensure t
   :init
@@ -108,6 +114,7 @@ If the new path's directories does not exist, create them."
   :ensure t
   :after yasnippet)
 
+;; Doom Theming
 (use-package doom-themes
   :ensure t
   :init (load-theme 'doom-outrun-electric t))
@@ -127,6 +134,20 @@ If the new path's directories does not exist, create them."
     (doom-modeline-set-modeline 'my-simple-line 'default))
   (add-hook 'doom-modeline-mode-hook 'setup-custom-doom-modeline))
 
+;; Nyan
+(use-package nyan-mode
+  :ensure t
+  :hook (doom-modeline-mode)
+  :custom
+  (nyan-wavy-trail t)
+  (nyan-animate-nyancat t))
+
+;; Parrot
+(use-package parrot
+    :ensure t
+    :hook (doom-modeline-mode . parrot-mode))
+
+;; Org Roam
 (use-package emacsql-sqlite3
   :ensure t)
 
@@ -151,14 +172,3 @@ If the new path's directories does not exist, create them."
   :config
   (require 'org-roam-dailies)
   (org-roam-setup))
-
-(use-package nyan-mode
-  :ensure t
-  :hook (doom-modeline-mode)
-  :custom
-  (nyan-wavy-trail t)
-  (nyan-animate-nyancat t))
-
-(use-package parrot
-    :ensure t
-    :hook (doom-modeline-mode . parrot-mode))
