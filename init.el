@@ -9,6 +9,8 @@
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+(setq package-gnupghome-dir nil)
+
 (set-face-attribute 'default nil :font "Roboto Mono")
 (set-face-attribute 'variable-pitch nil :font "Roboto Serif" :height 1.5)
 
@@ -172,3 +174,13 @@ If the new path's directories does not exist, create them."
   :config
   (require 'org-roam-dailies)
   (org-roam-setup))
+
+(defun fountain-mode-setup()
+  (olivetti-mode)
+  (display-line-numbers-mode 0))
+
+(use-package fountain-mode
+  :ensure t
+  :hook (fountain-mode . fountain-mode-setup))
+
+(use-package magit)
