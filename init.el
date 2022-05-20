@@ -81,10 +81,19 @@ If the new path's directories does not exist, create them."
   :custom
   (which-key-idle-delay 0.05))
 
+;; Olivetti
+(defun olivetti-mode-setup ()
+    (display-line-numbers-mode 0))
+
+(use-package olivetti
+  :ensure t
+  :hook
+  (olivetti-mode . olivetti-mode-setup))
+
 ;; Org Mode
 (defun org-mode-setup ()
   (org-indent-mode)
-
+  (olivetti-mode)
   (variable-pitch-mode 1)
   (display-line-numbers-mode 0))
 
@@ -101,10 +110,6 @@ If the new path's directories does not exist, create them."
   :custom
   (org-bullets-bullet-list '("◦")))
 
-;; Olivetti
-(use-package olivetti
-  :ensure t
-  :hook (org-mode . olivetti-mode))
 
 ;; Snippets
 (use-package yasnippet
@@ -141,8 +146,8 @@ If the new path's directories does not exist, create them."
   :ensure t
   :hook (doom-modeline-mode)
   :custom
-  (nyan-wavy-trail t)
-  (nyan-animate-nyancat t))
+  (nyan-wavy-trail nil)
+  (nyan-animate-nyancat nil))
 
 ;; Parrot
 (use-package parrot
@@ -175,12 +180,8 @@ If the new path's directories does not exist, create them."
   (require 'org-roam-dailies)
   (org-roam-setup))
 
-(defun fountain-mode-setup()
-  (olivetti-mode)
-  (display-line-numbers-mode 0))
-
 (use-package fountain-mode
   :ensure t
-  :hook (fountain-mode . fountain-mode-setup))
+  :hook (fountain-mode . olivetti-mode))
 
 (use-package magit)
