@@ -1,27 +1,18 @@
-(setq inhibit-startup-message t)
+(setq inhibit-startup-message t
+      visible-bell t)
 
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
 (menu-bar-mode -1)
-(tooltip-mode -1)
-(set-fringe-mode 10)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(global-display-line-numbers-mode 1)
 
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-(setq visible-bell t)
+(setq package-gnupghome-dir nil)
 
-(setq electric-pair-preserve-balance nil)
-;;(electric-pair-mode t)
-
-(set-face-attribute 'default nil :font "Fira Code" :height 120)
-(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 1.0)
-(set-face-attribute 'variable-pitch nil :font "Fira Sans" :height 1.2)
-
-(column-number-mode)
-(global-display-line-numbers-mode t)
+(set-face-attribute 'default nil :font "Roboto Mono")
+(set-face-attribute 'variable-pitch nil :font "Roboto Serif" :height 1.5)
 
 ;; make backup to a designated dir, mirroring the full path
 (defun my-backup-file-name (fpath)
@@ -41,180 +32,77 @@ If the new path's directories does not exist, create them."
 
 (setq display-time-format "%H:%M")
 (setq display-time-default-load-average nil)
-(display-time-mode 1)
+(display-time-mode)
 
-(dolist (mode '(org-mode-hook
-		term-mode-hook
-		shell-mode-hook
-		eshell-mode-hook
-		treemacs-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-(defun kill-other-buffers ()
-  "Kill all other buffers."
-  (interactive)
-  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+;; Move customization variables to a separate file and load it
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file 'noerror 'nomessage)
 
 (require 'package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+(setq package-archives '(
+			 ("melpa" . "https://melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+			 ("elpa" . "https://elpa.gnu.org/packages/")
+			))
 
 (package-initialize)
 (unless package-archive-contents
-  (package-refresh-contents))
+ (package-refresh-contents))
 
+;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+   (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" "b7e460a67bcb6cac0a6aadfdc99bdf8bbfca1393da535d4e8945df0648fa95fb" default))
- '(package-selected-packages
-   '(org-roam nyan-mode flycheck lsp-ui company-box lsp-treemacs lsp-ivy company company-mode lsp-mode treemacs-projectile projectile ivy-rich treemacs org-journal yasnippet-snippets yasnippet visual-fill-column org-bullets magit-gitflow magit rainbow-delimiters doom-themes doom-modeline all-the-icons which-key counsel use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
-(use-package which-key
-  :init
-  (which-key-mode 1)
-  :custom
-  (which-key-idle-delay 0.3))
-
-(use-package all-the-icons)
-
-(use-package doom-themes
-  :init (load-theme 'doom-outrun-electric t))
-
-(use-package doom-modeline
-  :hook
-  (after-init . doom-modeline-mode))
-
-(use-package nyan-mode
-  ;:hook (doom-modeline-mode . nyan-mode)
-  :custom
-  (nyan-animate-nyancat t)
-  (nyan-wavy-trail t)
-  (nyan-bar-length 130)
-  (nyan-minimum-window-width 100))
-
+;; Rainbow Delimiters
 (use-package rainbow-delimiters
+  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package yasnippet
-  :init
-  (yas-global-mode t))
-
-(use-package yasnippet-snippets
-  :after yasnippet)
-
-(use-package flycheck
-  :init (global-flycheck-mode))
-
-(use-package treemacs
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
-
+;; Ivy, Counsel, Swiper
 (use-package counsel
+  :ensure t
   :init
   (ivy-mode 1)
-  :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-f" . counsel-find-file)
-	 ("C-s" . swiper)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
-	 ("C-d" . ivy-switch-buffer-kill)
-	 :map ivy-reverse-i-search-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-d" . ivy-reverse-i-search-kill))
+  :bind (("C-s" . swiper-isearch)
+	 ("M-x" . counsel-M-x)
+	 ("C-x C-f" . counsel-find-file))
   :custom
-  (ivy-initial-inputs-alist nil)
-  (ivy-use-virtual-buffers t)
-  (ivy-count-format "(%d/%d) "))
+  (ivy-initial-inputs-alist nil))
 
-(use-package ivy-rich
+;; Which Key
+(use-package which-key
+  :ensure t
   :init
-  (ivy-rich-mode 1))
-
-(use-package projectile
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map))
+  (which-key-mode)
   :custom
-  (projectile-project-search-path '("~/")))
+  (which-key-idle-delay 0.05))
 
-(use-package treemacs-projectile)
+;; Olivetti
+(defun olivetti-mode-setup ()
+    (display-line-numbers-mode 0))
 
-(use-package magit
-  :bind ("C-x g" . magit-status))
-
-(use-package magit-gitflow
-  :after magit
+(use-package olivetti
+  :ensure t
   :hook
-  (magit-mode . turn-on-magit-gitflow))
+  (olivetti-mode . olivetti-mode-setup))
 
+;; Org Mode
 (defun org-mode-setup ()
   (org-indent-mode)
+  (olivetti-mode)
   (variable-pitch-mode 1)
-  (visual-line-mode 1)
-  (setq header-line-format ""))
-
-(defun org-font-setup ()
-  (dolist (face '((org-document-title . 2.0)
-		  (org-level-1 . 1.8)
-		  (org-level-2 . 1.7)
-		  (org-level-3 . 1.6)
-		  (org-level-4 . 1.5)
-		  (org-level-5 . 1.4)
-		  (org-level-6 . 1.3)
-		  (org-level-7 . 1.2)
-		  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :weight 'bold :height (cdr face)))
-
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+  (display-line-numbers-mode 0))
 
 (use-package org
-  :commands org-mode
+  :ensure t
+  :pin elpa
   :hook (org-mode . org-mode-setup)
   :bind (("C-c a" . org-agenda)
-	 ("C-c c" . org-capture))
-  :config
-  (org-font-setup))
+	 ("C-c c" . org-capture)))
 
 (use-package org-bullets
   :after org
@@ -222,119 +110,53 @@ If the new path's directories does not exist, create them."
   :custom
   (org-bullets-bullet-list '("◦")))
 
-(defun org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-	visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
 
-(use-package visual-fill-column
-  :hook (org-mode . org-mode-visual-fill))
-
-(use-package org-journal
-  :custom
-  (org-journal-dir "~/Polymath/Journal")
-  (org-journal-find-file 'find-file))
-
-
-(defun lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
-
-(use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook ((c++-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration)
-	 (lsp-mode . lsp-mode-setup))
-  :commands lsp)
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode))
-
-(use-package lsp-treemacs
-  :after lsp)
-
-(use-package company
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
-(use-package company-box
-  :after company
-  :hook (company-mode . company-box-mode))
-
-(use-package org-roam
+;; Snippets
+(use-package yasnippet
   :ensure t
   :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/Polymath")
-  (org-roam-completion-everywhere t)
-  (org-roam-capture-templates
-   '(("d" "default" plain
-      "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t
-      :empty-lines 1)
-     ("t" "task" entry
-      "* TODO ${title}\n\n%?"
-      :target (node "Inbox")
-      :empty-lines 1
-      :kill-buffer)
-     ("b" "book notes" plain
-      "* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t
-      :empty-lines 1)
-     ("p" "project" plain (file "~/Polymath/Templates/ProjectTemplate.org")
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: :Project:Agenda")
-      :unnarrowed t
-      :empty-lines 1)))
-  (org-roam-dailies-directory "daily/")
-  (org-roam-dailies-capture-templates
-      '(("d" "default" entry
-         "* %<%H:%M>\n\n%?"
-         :if-new (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d>\n"))))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n f" . org-roam-node-find)
-	 ("C-c n i" . org-roam-node-insert)
-	 :map org-mode-map
-	 ("C-M-i" . completion-at-point)
-	 :map org-roam-dailies-map
-	 ("Y" . org-roam-dailies-capture-yesterday)
-	 ("T" . org-roam-dailies-capture-tomorrow))
-  :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)
+  (yas-global-mode t))
+
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet)
+
+;; Doom Theming
+(use-package doom-themes
+  :ensure t
+  :init (load-theme 'doom-challenger-deep t))
+
+(use-package doom-modeline
+  :ensure t
+  :hook
+  (after-init . doom-modeline-mode)
   :config
-  (require 'org-roam-dailies)
-  (org-roam-setup))
+  ;; Define your custom doom-modeline
+  (doom-modeline-def-modeline 'my-simple-line
+    '(bar matches buffer-info remote-host)
+    '(buffer-position parrot selection-info misc-info minor-modes input-method buffer-encoding major-mode process vcs checker))
 
-(require 'org-roam-node)
-(require 'seq)
+  ;; Add to `doom-modeline-mode-hook` or other hooks
+  (defun setup-custom-doom-modeline ()
+    (doom-modeline-set-modeline 'my-simple-line 'default))
+  (add-hook 'doom-modeline-mode-hook 'setup-custom-doom-modeline))
 
-;; The buffer you put this code in must have lexical-binding set to t!
-;; See the final configuration at the end for more details.
+;; Nyan
+(use-package nyan-mode
+  :ensure t
+  :hook (doom-modeline-mode)
+  :custom
+  (nyan-wavy-trail nil)
+  (nyan-animate-nyancat nil))
 
-(defun my/org-roam-filter-by-tag (tag-name)
-  (lambda (node)
-    (member tag-name (org-roam-node-tags node))))
+;; Parrot
+(use-package parrot
+    :ensure t
+    :hook (doom-modeline-mode . parrot-mode))
 
-(defun my/org-roam-list-notes-by-tag (tag-name)
-  (mapcar #'org-roam-node-file
-          (seq-filter
-           (my/org-roam-filter-by-tag tag-name)
-           (org-roam-node-list))))
+;; Org Roam
+(use-package fountain-mode
+  :ensure t
+  :hook (fountain-mode . olivetti-mode))
 
-(defun my/org-roam-refresh-agenda-list ()
-  (interactive)
-  (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project")))
-
-;; Build the agenda list the first time for the session
-(my/org-roam-refresh-agenda-list)
+(use-package magit)
