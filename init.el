@@ -124,7 +124,7 @@ If the new path's directories does not exist, create them."
 ;; Doom Theming
 (use-package doom-themes
   :ensure t
-  :init (load-theme 'doom-outrun-electric t))
+  :init (load-theme 'doom-challenger-deep t))
 
 (use-package doom-modeline
   :ensure t
@@ -155,31 +155,6 @@ If the new path's directories does not exist, create them."
     :hook (doom-modeline-mode . parrot-mode))
 
 ;; Org Roam
-(use-package emacsql-sqlite3
-  :ensure t)
-
-(use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-database-connector 'sqlite3)
-  (org-roam-directory "~/Polymath")
-  (org-roam-completion-everywhere t)
-  (org-roam-dailies-directory "daily/")
-  (org-roam-dailies-capture-templates
-      '(("d" "default" entry
-         "* %<%H:%M>\n\n%?"
-         :if-new (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d>\n"))))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-	 ("C-c n c" . org-roam-capture))
-  :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)
-  :config
-  (require 'org-roam-dailies)
-  (org-roam-setup))
-
 (use-package fountain-mode
   :ensure t
   :hook (fountain-mode . olivetti-mode))
